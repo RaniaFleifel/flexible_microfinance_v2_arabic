@@ -26,6 +26,8 @@ flexible_loan_noapprox=[]
 entries=[]
 app=Flask(__name__,template_folder='templates')
 options_month = ['jan', 'feb', 'mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
+options_month_ar = ['يناير', 'فبراير', 'مارس','ابريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
+
 interest_rate=18/100
 
 @app.route("/")
@@ -43,12 +45,12 @@ def calculations():
     flexible_loan_noapprox=[] 
 
     while amount>15000: 
-        tmp="The cap of the loan is 15000!.. Please re-enter the loan amount"
+        tmp="المبلغ مينفعش يكون أكبر من  ١٥٠٠٠"
         return render_template('ideal_html.html',loan_size_txt_no=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
     else:
         a.append(amount)
 
-        tmp=f"Loan amount: {amount} EGP"
+        tmp=f"مبلغ القرض: {amount}"
         return render_template('ideal_html.html',loan_size_txt_yes=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
     print("############### IN CALCULATIONS",a)
     
@@ -65,7 +67,6 @@ def payment_schedule():
     frequency=data["frequency"]
     holiday_yn=data["holiday"]
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>b after append",b,'LEN(B)',len(b))
-
     if data["grace"]=="no":
         grace_yn=data["grace"]
         grace_dur=0
@@ -104,9 +105,8 @@ def payment_schedule():
     loan_amount_txt=f"Loan amount is {loan_size} EGP"
     start_month_txt=f"Dispersment starts in {str(start_month)}\n"
     frequency_txt=f"{frequency.capitalize()} payment"
-#    print(str(start_month_txt),frequency_txt,grace_txt,holiday_txt)
 
-    df = pd.DataFrame(columns=['Month','Standard loan','Flexible loan'])
+    df = pd.DataFrame(columns=['الشهر','القرض التقليدي','القرض المرن'])
     monthly_share=(loan_size+(interest_rate*loan_size))/12    
     print("monthly_share",monthly_share,start_month)
 
@@ -630,11 +630,13 @@ def payment_schedule():
 
     html_table_blue_light = build_table(df, 'blue_dark',padding="10px 10px 10px 10px" )
     # Save to html file
-    with open('html_table_blue.html', 'w') as f:
+    with open('html_table_blue.html', 'w',encoding='utf-8') as f:
         f.write(html_table_blue_light)
 
     return render_template('ideal_html.html',loan_amount_txt=loan_amount_txt,start_month_txt=start_month_txt,frequency_txt=frequency_txt,grace_txt=grace_txt,holiday_txt=holiday_txt, table_final=html_table_blue_light)
     
+
+
 
 
 if __name__=="__main__":
