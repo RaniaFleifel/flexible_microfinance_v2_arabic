@@ -69,7 +69,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 10%;
       height: 30px;
       border-radius: 7px;
-      font-size: 19px;
+      font-size: 18px;
     }
 
     #email-label {
@@ -87,7 +87,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 10%;
       height: 30px;
       border-radius: 7px;
-      font-size: 19px;
+      font-size: 20px;
     }
 
     #number-label {
@@ -105,7 +105,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 10%;
       height: 30px;
       border-radius: 7px;
-      font-size: 19px;
+      font-size: 18px;
     }
 
     #dropdown-label {
@@ -125,7 +125,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 9%;
       height: 30px;
       border-radius: 7px;
-      font-size: 19px;
+      font-size: 18px;
       color: grey;
     }
 
@@ -148,7 +148,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 10%;
       height: 30px;
       border-radius: 7px;
-      font-size: 19px;
+      font-size: 18px;
       color: white;
     }
 
@@ -169,7 +169,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 60%;
       height: 30px;
       border-radius: 5px;
-      font-size: 19px;
+      font-size: 18px;
       color: grey;
     }
 
@@ -186,7 +186,7 @@ This is a static survey form from freeCodeCamp
       font-family: arial;
       height: 30px;
       color: white;
-      font-size: 16px;
+      font-size: 18px;
     }
 
     #improvements {
@@ -195,7 +195,7 @@ This is a static survey form from freeCodeCamp
       margin-right: 9%;
       height: 30px;
       border-radius: 7px;
-      font-size: 19px;
+      font-size: 20px;
       color: white;
     }
 
@@ -214,7 +214,7 @@ This is a static survey form from freeCodeCamp
       margin-left: 10%;
       margin-right: 10%;
       height: 120px;
-      font-size: 19px;
+      font-size: 18px;
       color: grey;
       align-text: start;
       padding: 0.625rem;
@@ -247,7 +247,7 @@ This is a static survey form from freeCodeCamp
       border-color: #003564;
       border-style: solid;
       color: white;
-      font-size: 17px;
+      font-size: 18px;
       height: 30px;
       margin-top: 20px;
       margin-bottom: 25px;
@@ -259,24 +259,24 @@ This is a static survey form from freeCodeCamp
 
     <br>
     <br>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;"dir="rtl";lang="ar">دلوقتي احنا هنساعدك انك تحسب بسهولة جدول دفع اقساط  القرض المرن و المميزات اللي بنقدمهالك في السداد </p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">دلوقتي احنا هنساعدك انك تحسب بسهولة جدول دفع اقساط  القرض المرن و المميزات اللي بنقدمهالك في السداد </p>
     <br>
 
 <form action="{{ url_for('calculations')}}" method="post" dir="rtl" lang="ar">
 
-      <label id="name-label" for="name" >من فضلك اكتب مبلغ القرض  </label>
+      <label id="name-label" for="name" >١- من فضلك اكتب مبلغ القرض  </label>
 <br>
       <input id="name" name="amount" dir="rtl" lang="ar" placeholder="١٥٠٠٠ جنيه اقصى مبلغ" required>
       <button type="submit" id="submit2" dir="rtl" lang="ar">بداية الحسابات</button>
       </form>
 
-<p style="margin-left: 10%; margin-right: 10%;color: 003564;font-size: 22px;" dir="rtl" lang="ar">{{loan_size_txt_no}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: 003564;font-size: 20px;" dir="rtl" lang="ar">{{loan_size_txt_no}}</p>
 
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;text-align: center;text-decoration: overline underline" dir="rtl" lang="ar">{{loan_size_txt_yes}}</p>
 
 <form action="{{ url_for('payment_schedule')}}" method="post" dir="rtl" lang="ar">
 
-      <label id="dropdown-label" for="dropdown" dir="rtl" lang="ar"> حابب تدفع القسط كل قد اية؟ </label>
+      <label id="dropdown-label" for="dropdown" dir="rtl" lang="ar"> ٢- حابب تدفع القسط كل قد ايه؟ </label>
       <select id="dropdown", name=frequency>
         <option value="monthly" dir="rtl" lang="ar">كل شهر</option>
         <option value="biweekly" dir="rtl" lang="ar"> كل اسبوعين (مرتين في الشهر)</option>
@@ -286,12 +286,11 @@ This is a static survey form from freeCodeCamp
 
 
       <br>
-      <br>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;"dir="rtl";lang="ar">دلوقتي انت عندك ميزة في القرض المرن وهي انك ممكن تختار فترة سماح اول شهر او شهرين او ٣ شهور  تدفع الفايدة بس .. 
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">٣- عندنا ميزة في القرض المرن وهي انك ممكن تختار فترة سماح اول شهر او شهرين او ٣ شهور  ,تدفع فيهم الفايدة بس .. 
 </p>
 
       <label for="recommend" id="recommend-label" dir="rtl" lang="ar"> حابب تستفيد من الميزة دي؟ ولو ايوة حابب الفترة دي تكون كام شهر؟
-</label><br><br>
+</label><br>
       <label id="recommend" dir="rtl" lang="ar">
         <input type="radio" value="yes1" name="grace" dir="rtl" lang="ar">ايوة - سماح شهر واحد 
       </label><br>
@@ -307,11 +306,10 @@ This is a static survey form from freeCodeCamp
       <br>
       <br>
 
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;"dir="rtl";lang="ar">فية ميزة تانية وهي انك ترحل سداد الأقساط و تدفع الفايدة بس شهر او شهرين 
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">٤- فيه ميزة تانية وهي انك تقدر ترحل سداد الأقساط و تدفع الفايدة بس, اي شهر او شهرين انت تختارهم.. 
 </p>
-    <br>
  <label for="recommend" id="recommend-label" dir="rtl" lang="ar"> حابب تستفيد من الميزة دي؟ 
-</label><br><br>
+</label><br>
       <label id="recommend"  dir="rtl" lang="ar">
         <input type="radio" value="yes" name="holiday" dir="rtl" lang="ar">ايوه حابب الميزة دي
       </label>
@@ -359,11 +357,11 @@ This is a static survey form from freeCodeCamp
       <button type="submit" id="submit">جدول السداد</button>
     </form>
 
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{loan_amount_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{start_month_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{frequency_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{grace_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{holiday_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{loan_amount_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{start_month_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{frequency_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{grace_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{holiday_txt}}</p>
 
 <p  style="margin-left: 70%; margin-right: 10%">{{table_final|safe}}  </p>
 
