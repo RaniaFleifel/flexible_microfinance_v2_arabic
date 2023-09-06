@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Sep  6 14:48:54 2023
+
+@author: rania
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Aug 10 04:54:32 2023
 
 @author: rania
@@ -70,29 +77,43 @@ def payment_schedule():
     if data["grace"]=="no":
         grace_yn=data["grace"]
         grace_dur=0
-        grace_txt="Grace period not applied"
+        grace_txt="مش حابب فترة سماح"
     else:
         grace_yn=re.split(r'(\d+)', data["grace"])[0]
         grace_dur = int(re.split(r'(\d+)', data["grace"])[1])
-        grace_txt=f"Grace period applied for {str(grace_dur)} months \n"
+        if grace_dur==1:
+            grace_dur_ar=" شهر"
+        elif grace_dur==2:
+            grace_dur_ar=" شهرين"
+        else:
+            grace_dur_ar="3 شهور"
+
+        grace_txt=f"هاخد فترة سماح {str(grace_dur_ar)} \n"
     
     if holiday_yn=="no":
-        holiday_txt="Repayment holiday not applied"
+        holiday_txt="مش حابب ترحيل السداد"
         holiday_dur=0
         holiday_months=""
     else:
-        
         if data["month1"]==' ':
             holiday_months=data["month2"].capitalize()
+            holiday_months_ar=options_month_ar[options_month.index(holiday_months.lower())]
             holiday_dur=1
+            holiday_dur_ar=" شهر"
         elif data["month2"]==' ':
             holiday_months=data["month1"].capitalize()
-            holiday_dur=1
-        else:
-            holiday_months=[data["month1"].capitalize(),data["month2"].capitalize()]
-            holiday_dur=2
+            holiday_months_ar=options_month_ar[options_month.index(holiday_months.lower())]
 
-        holiday_txt=f"Repayment holiday applied for {holiday_dur} months: {holiday_months} \n"
+            holiday_dur=1
+            holiday_dur_ar=" شهر"
+        else:
+            holiday_months=[data["month1"],data["month2"]]
+            holiday_months_ar=[options_month_ar[options_month.index(data["month1"].lower())],options_month_ar[options_month.index(data["month2"].lower())]]
+            holiday_dur=2
+            holiday_dur_ar=" شهرين"
+
+
+        holiday_txt=f"هرحل السداد لمدة{holiday_dur_ar}: {holiday_months_ar} \n"
 
     # #ideal v1 assumes dispersment starts tomorrow
     # tom_date = datetime.now()+timedelta(1)
@@ -102,9 +123,60 @@ def payment_schedule():
     this_month=datetime.now().strftime("%b").lower()
     start_month=options_month[options_month.index(this_month)+1]
     
-    loan_amount_txt=f"Loan amount is {loan_size} EGP"
-    start_month_txt=f"Dispersment starts in {str(start_month)}\n"
-    frequency_txt=f"{frequency.capitalize()} payment"
+    
+    start_month_ar=options_month_ar[options_month.index(this_month)+1]
+    if frequency=="monthly":
+        frequency_ar="كل شهر"
+    elif frequency=="biweekly":
+        frequency_ar="كل اسبوعين (مرتين في الشهر)"
+    else:
+        frequency_ar="كل اسبوع  (٤ مرات في الشهر)"
+
+
+    loan_amount_txt=f"مبلغ القرض: {loan_size} جنيه"
+    start_month_txt=f"السداد يبتدي من شهر{str(start_month_ar)}\n"
+    frequency_txt=f"هدفع القسط {frequency_ar}"
+#    print(str(start_month_txt),frequency_txt,grace_txt,holiday_txt)
+
+
+    # if data["grace"]=="no":
+    #     grace_yn=data["grace"]
+    #     grace_dur=0
+    #     grace_txt="Grace period not applied"
+    # else:
+    #     grace_yn=re.split(r'(\d+)', data["grace"])[0]
+    #     grace_dur = int(re.split(r'(\d+)', data["grace"])[1])
+    #     grace_txt=f"Grace period applied for {str(grace_dur)} months \n"
+    
+    # if holiday_yn=="no":
+    #     holiday_txt="Repayment holiday not applied"
+    #     holiday_dur=0
+    #     holiday_months=""
+    # else:
+        
+    #     if data["month1"]==' ':
+    #         holiday_months=data["month2"].capitalize()
+    #         holiday_dur=1
+    #     elif data["month2"]==' ':
+    #         holiday_months=data["month1"].capitalize()
+    #         holiday_dur=1
+    #     else:
+    #         holiday_months=[data["month1"].capitalize(),data["month2"].capitalize()]
+    #         holiday_dur=2
+
+    #     holiday_txt=f"Repayment holiday applied for {holiday_dur} months: {holiday_months} \n"
+
+    # # #ideal v1 assumes dispersment starts tomorrow
+    # # tom_date = datetime.now()+timedelta(1)
+    # # tom_month=tom_date.strftime("%b")
+    # # start_month=tom_month.lower()
+    # # #ideal v2 wants to start next month
+    # this_month=datetime.now().strftime("%b").lower()
+    # start_month=options_month[options_month.index(this_month)+1]
+    
+    # loan_amount_txt=f"Loan amount is {loan_size} EGP"
+    # start_month_txt=f"Dispersment starts in {str(start_month)}\n"
+    # frequency_txt=f"{frequency.capitalize()} payment"
 
     df = pd.DataFrame(columns=['الشهر','القرض التقليدي','القرض المرن'])
     monthly_share=(loan_size+(interest_rate*loan_size))/12    
@@ -136,7 +208,7 @@ def payment_schedule():
         
         if frequency=="monthly":
             for i in range(num_months):
-                this_month=options_month[(loc_start_month+i)%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+i)%12]
                 new_line=[this_month,round(monthly_share,2),round(monthly_share,2)]
     
                 df.loc[i]=new_line
@@ -149,11 +221,11 @@ def payment_schedule():
         elif frequency=="biweekly":
             for i in range(0,num_months*2,2):
                 
-                this_month=options_month[(loc_start_month+int(i/2))%12].capitalize()
-                new_line=[this_month+", week2",0,round(monthly_share/2,2)]
+                this_month=options_month_ar[(loc_start_month+int(i/2))%12]
+                new_line=[this_month+", الاسبوع التاني",0,round(monthly_share/2,2)]
                 df.loc[i]=new_line
                 
-                new_line=[this_month+", week4",round(monthly_share,2),round(monthly_share/2,2)]
+                new_line=[this_month+", الاسبوع الرابع",round(monthly_share,2),round(monthly_share/2,2)]
                 df.loc[i+1]=new_line
                 
             print("^^^^^^^^^^^^^^^^^^^^^how much is i now?",i)
@@ -163,21 +235,21 @@ def payment_schedule():
         else:
             for i in range(0,num_months*4,4):
                 
-                this_month=options_month[(loc_start_month+int(i/4))%12].capitalize()
-                new_line=[this_month+", week1",0,round(monthly_share/4,2)]
+                this_month=options_month_ar[(loc_start_month+int(i/4))%12]
+                new_line=[this_month+", اول اسبوع",0,round(monthly_share/4,2)]
                 df.loc[i]=new_line
-                new_line=[this_month+", week2",0,round(monthly_share/4,2)]
+                new_line=[this_month+", الاسبوع التاني",0,round(monthly_share/4,2)]
                 df.loc[i+1]=new_line
-                new_line=[this_month+", week3",0,round(monthly_share/4,2)]
+                new_line=[this_month+", الاسبوع التالت",0,round(monthly_share/4,2)]
                 df.loc[i+2]=new_line
-                new_line=[this_month+", week4",round(monthly_share,2),round(monthly_share/4,2)]
+                new_line=[this_month+", الاسبوع الرابع",round(monthly_share,2),round(monthly_share/4,2)]
                 df.loc[i+3]=new_line
                 
                 
             print("^^^^^^^^^^^^^^^^^^^^^how much is i now?",i)
             df.loc[i+4]=["------------------","------------------","------------------"]
 
-            df.loc[i+5]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+5]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
             #print(df)
     elif grace_yn=='yes' and holiday_yn=='no':
         num_months=12+grace_dur
@@ -191,7 +263,7 @@ def payment_schedule():
         if frequency=="monthly":
 
             for i in range(num_months):
-                this_month=options_month[(loc_start_month+i)%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+i)%12]
                         
                 if i in range(grace_dur):
                     new_line=[this_month,round(monthly_share,2),round(updated_monthly_intrest,2)]    
@@ -213,35 +285,35 @@ def payment_schedule():
     
             df.loc[i+1]=["------------------","------------------","------------------"]
        
-            df.loc[i+2]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+2]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
             # print(df)
         elif frequency=="biweekly":
             for i in range(0,num_months*2,2):
                 
-                this_month=options_month[(loc_start_month+int(i/2))%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+int(i/2))%12]
                 
                 if i in range(grace_dur*2):
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
                     df.loc[i+1]=new_line
 
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(updated_monthly_intrest)
     
                 elif i>=12*2:
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/2,2)]  
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/2,2)]  
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",0,round(flexible_monthly_share/2,2)]  
+                    new_line=[this_month+", رابع اسبوع",0,round(flexible_monthly_share/2,2)]  
                     df.loc[i+1]=new_line
                     
                     std_loan_noapprox.append(0)
                     flexible_loan_noapprox.append(flexible_monthly_share)
     
                 else:
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/2,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(flexible_monthly_share/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(flexible_monthly_share/2,2)]    
                     df.loc[i+1]=new_line
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(flexible_monthly_share)
@@ -249,47 +321,47 @@ def payment_schedule():
             print("^^^^^^^^^^^^^^^^^^^^^how much is i now?",i)
             df.loc[i+2]=["------------------","------------------","------------------"]
 
-            df.loc[i+3]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+3]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
         
         else:#if frequency=="biweekly":
             for i in range(0,num_months*4,4):
                 
-                this_month=options_month[(loc_start_month+int(i/4))%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+int(i/4))%12]
                 
                 if i in range(grace_dur*4):
-                    new_line=[this_month+", week1",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
                     df.loc[i+3]=new_line
 
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(updated_monthly_intrest)
     
                 elif i>=12*4:
-                    new_line=[this_month+", week1",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", اول اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", تالت اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", رابع اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+3]=new_line
                     
                     std_loan_noapprox.append(0)
                     flexible_loan_noapprox.append(flexible_monthly_share)
     
                 else:
-                    new_line=[this_month+", week1",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(flexible_monthly_share/4,2)]    
                     df.loc[i+3]=new_line
                     
                     std_loan_noapprox.append(monthly_share)
@@ -298,7 +370,7 @@ def payment_schedule():
             print("^^^^^^^^^^^^^^^^^^^^^how much is i now?",i)
             df.loc[i+4]=["------------------","------------------","------------------"]
 
-            df.loc[i+5]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+5]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
     
         
     elif grace_yn=='no' and holiday_yn=='yes':
@@ -314,10 +386,10 @@ def payment_schedule():
         if frequency=="monthly":
 
             for i in range(num_months):
-                this_month=options_month[(loc_start_month+i)%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+i)%12]
                 print(i,this_month)
     
-                if this_month.capitalize() in holiday_months and x<holiday_dur:
+                if this_month in holiday_months_ar and x<holiday_dur:
                     #covered=1
                     new_line=[this_month,round(monthly_share,2),round(updated_monthly_intrest,2)]    
                     df.loc[i]=new_line
@@ -338,17 +410,17 @@ def payment_schedule():
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(flexible_monthly_share)
             df.loc[i+1]=["------------------","------------------","------------------"]
-            df.loc[i+2]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+2]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
             #print(df)
         elif frequency=="biweekly":
             for i in range(0,num_months*2,2):
-                this_month=options_month[(loc_start_month+int(i/2))%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+int(i/2))%12]
 
-                if this_month.capitalize() in holiday_months and x<holiday_dur:
+                if this_month in holiday_months_ar and x<holiday_dur:
                     #covered=1
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
                     df.loc[i+1]=new_line
                     
                     std_loan_noapprox.append(monthly_share)
@@ -357,38 +429,38 @@ def payment_schedule():
                     x+=1
                 
                 elif i>=12*2:
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/2,2)]  
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/2,2)]  
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",0,round(flexible_monthly_share/2,2)]  
+                    new_line=[this_month+", رابع اسبوع",0,round(flexible_monthly_share/2,2)]  
                     df.loc[i+1]=new_line
                     std_loan_noapprox.append(0)
                     flexible_loan_noapprox.append(flexible_monthly_share)
     
                 else:
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/2,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(flexible_monthly_share/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(flexible_monthly_share/2,2)]    
                     df.loc[i+1]=new_line
     
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(flexible_monthly_share)
             df.loc[i+2]=["------------------","------------------","------------------"]
 
-            df.loc[i+3]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+3]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
 
         else:
             for i in range(0,num_months*4,4):
-                this_month=options_month[(loc_start_month+int(i/4))%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+int(i/4))%12]
 
-                if this_month.capitalize() in holiday_months and x<holiday_dur:
+                if this_month in holiday_months_ar and x<holiday_dur:
                     #covered=1
-                    new_line=[this_month+", week1",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
                     df.loc[i+3]=new_line
     
                     std_loan_noapprox.append(monthly_share)
@@ -397,30 +469,30 @@ def payment_schedule():
                     x+=1
                 
                 elif i>=12*4:
-                    new_line=[this_month+", week1",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", اول اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", تالت اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", رابع اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+3]=new_line
                     std_loan_noapprox.append(0)
                     flexible_loan_noapprox.append(flexible_monthly_share)
     
                 else:
-                    new_line=[this_month+", week1",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(flexible_monthly_share/4,2)]    
                     df.loc[i+3]=new_line
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(flexible_monthly_share)
             df.loc[i+4]=["------------------","------------------","------------------"]
-            df.loc[i+5]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+5]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
 
     elif grace_yn=='yes' and holiday_yn=='yes':
         num_months=12+holiday_dur+grace_dur
@@ -434,10 +506,10 @@ def payment_schedule():
         if frequency=="monthly":
 
             for i in range(num_months):
-                this_month=options_month[(loc_start_month+i)%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+i)%12]
                 #print(i,this_month)
     
-                if this_month.capitalize() in holiday_months and x<holiday_dur and i not in range(grace_dur):
+                if this_month in holiday_months_ar and x<holiday_dur and i not in range(grace_dur):
                     #print(this_month)
                     new_line=[this_month,round(monthly_share,2),round(updated_monthly_intrest,2)]    
                     df.loc[i]=new_line
@@ -475,30 +547,30 @@ def payment_schedule():
                     flexible_loan_noapprox.append(flexible_monthly_share)
     
             df.loc[i+1]=["------------------","------------------","------------------"]
-            df.loc[i+2]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+2]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
         elif frequency=="biweekly":
             for i in range(0,num_months*2,2):
-                this_month=options_month[(loc_start_month+int(i/2))%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+int(i/2))%12]
     
-                if this_month.capitalize() in holiday_months and x<holiday_dur and i not in range(grace_dur*2):
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/2,2)]    
+                if this_month in holiday_months_ar and x<holiday_dur and i not in range(grace_dur*2):
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
                     df.loc[i+1]=new_line
                     print('caseA')
                     x+=1
                     if i>=12*2:#(num_months-holiday_dur-grace_dur):
-                        new_line=[this_month+", week2",0,round(updated_monthly_intrest/2,2)]  
+                        new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/2,2)]  
                         df.loc[i]=new_line
-                        new_line=[this_month+", week4",0,round(updated_monthly_intrest/2,2)]  
+                        new_line=[this_month+", رابع اسبوع",0,round(updated_monthly_intrest/2,2)]  
                         df.loc[i+1]=new_line
                         std_loan_noapprox.append(0)
                         flexible_loan_noapprox.append(updated_monthly_intrest)
                         print('caseAA')
                     else:
-                        new_line=[this_month+", week2",0,round(updated_monthly_intrest/2,2)]  
+                        new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/2,2)]  
                         df.loc[i]=new_line
-                        new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/2,2)]  
+                        new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/2,2)]  
                         df.loc[i+1]=new_line
                         std_loan_noapprox.append(monthly_share)
                         flexible_loan_noapprox.append(updated_monthly_intrest)
@@ -506,9 +578,9 @@ def payment_schedule():
                         print('?????')
                         
                 elif i in range(grace_dur*2):
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/2,2)]    
                     df.loc[i+1]=new_line
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(updated_monthly_intrest)
@@ -516,48 +588,48 @@ def payment_schedule():
     
                   
                 elif i>=12*2:#(num_months-holiday_dur-grace_dur)*2:
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/2,2)]  
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/2,2)]  
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",0,round(flexible_monthly_share/2,2)]  
+                    new_line=[this_month+", رابع اسبوع",0,round(flexible_monthly_share/2,2)]  
                     df.loc[i+1]=new_line
                     std_loan_noapprox.append(0)
                     flexible_loan_noapprox.append(flexible_monthly_share)
                     print('caseD')
     
                 else:
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/2,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/2,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(flexible_monthly_share/2,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(flexible_monthly_share/2,2)]    
                     df.loc[i+1]=new_line
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(flexible_monthly_share)
                     print('caseE')
             df.loc[i+2]=["------------------","------------------","------------------"]
-            df.loc[i+3]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+3]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
 
         else:
             for i in range(0,num_months*4,4):
-                this_month=options_month[(loc_start_month+int(i/4))%12].capitalize()
+                this_month=options_month_ar[(loc_start_month+int(i/4))%12]
     
-                if this_month.capitalize() in holiday_months and x<holiday_dur and i not in range(grace_dur*4):
-                    new_line=[this_month+", week1",0,round(updated_monthly_intrest/4,2)]    
+                if this_month in holiday_months_ar and x<holiday_dur and i not in range(grace_dur*4):
+                    new_line=[this_month+", اول اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
                     df.loc[i+3]=new_line
                     
                     x+=1
                     if i>=12*4:#num_months-holiday_dur-grace_dur:
-                        new_line=[this_month+", week1",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", اول اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i]=new_line
-                        new_line=[this_month+", week2",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i+1]=new_line
-                        new_line=[this_month+", week3",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", تالت اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i+2]=new_line
-                        new_line=[this_month+", week4",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", رابع اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i+3]=new_line
                         std_loan_noapprox.append(0)
                         flexible_loan_noapprox.append(updated_monthly_intrest)
@@ -565,13 +637,13 @@ def payment_schedule():
                     else:
                         
                         
-                        new_line=[this_month+", week1",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", اول اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i]=new_line
-                        new_line=[this_month+", week2",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i+1]=new_line
-                        new_line=[this_month+", week3",0,round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", تالت اسبوع",0,round(updated_monthly_intrest/4,2)]  
                         df.loc[i+2]=new_line
-                        new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/4,2)]  
+                        new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/4,2)]  
                         df.loc[i+3]=new_line
                         
                         std_loan_noapprox.append(monthly_share)
@@ -579,43 +651,43 @@ def payment_schedule():
                         print('caseAA')
                         print('?????')
                 elif i in range(grace_dur*4):
-                    new_line=[this_month+", week1",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(updated_monthly_intrest/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(updated_monthly_intrest/4,2)]    
                     df.loc[i+3]=new_line
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(updated_monthly_intrest)
     
                   
                 elif i>=12*4:#num_months-holiday_dur-grace_dur:
-                    new_line=[this_month+", week1",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",0,round(flexible_monthly_share/4,2)]  
+                    new_line=[this_month+", رابع اسبوع",0,round(flexible_monthly_share/4,2)]  
                     df.loc[i+3]=new_line
                     std_loan_noapprox.append(0)
                     flexible_loan_noapprox.append(flexible_monthly_share)
     
                 else:
-                    new_line=[this_month+", week1",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", اول اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i]=new_line
-                    new_line=[this_month+", week2",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تاني اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+1]=new_line
-                    new_line=[this_month+", week3",0,round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", تالت اسبوع",0,round(flexible_monthly_share/4,2)]    
                     df.loc[i+2]=new_line
-                    new_line=[this_month+", week4",round(monthly_share,2),round(flexible_monthly_share/4,2)]    
+                    new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(flexible_monthly_share/4,2)]    
                     df.loc[i+3]=new_line
                     std_loan_noapprox.append(monthly_share)
                     flexible_loan_noapprox.append(flexible_monthly_share)
             df.loc[i+4]=["------------------","------------------","------------------"]
-            df.loc[i+5]=["Total",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
+            df.loc[i+5]=["المجموع",round(sum(std_loan_noapprox),2),round(sum(flexible_loan_noapprox),2)]
 
 
 
