@@ -4,8 +4,8 @@ This is a static survey form from freeCodeCamp
 
 <body id="background">
   <header>
-    <h1 id="title">Flexible Loan payment schedules</h1>
-    <p id="description"><i>18% interest</i></p>
+    <h1 id="title">جدول سداد القرض المرن</h1>
+    <p id="description"><i>الفايدة ٪١٨</i></p>
   </header>
 
   <style>
@@ -49,6 +49,9 @@ This is a static survey form from freeCodeCamp
     #survey-form {}
 
     #name-label {
+	dir:"rtl";
+	lang:"ar";
+	text-align:"right";
       width: 80%;
       margin-left: 10%;
       margin-right: 10%;
@@ -58,6 +61,9 @@ This is a static survey form from freeCodeCamp
     }
 
     #name {
+	dir:"rtl" ;
+	lang: "ar";
+	text-align:"right";
       width: 80%;
       margin-left: 10%;
       margin-right: 10%;
@@ -103,6 +109,8 @@ This is a static survey form from freeCodeCamp
     }
 
     #dropdown-label {
+	dir:"rtl" ;
+	lang: "ar";
       width: 80%;
       margin-left: 10%;
       margin-right: 10%;
@@ -122,6 +130,8 @@ This is a static survey form from freeCodeCamp
     }
 
     #recommend-label {
+	dir:"rtl" ;
+	lang: "ar";
       width: 80%;
       margin-left: 10%;
       margin-right: 10%;
@@ -131,6 +141,8 @@ This is a static survey form from freeCodeCamp
     }
 
     #recommend {
+	dir:"rtl" ;
+	lang: "ar";
       width: 80%;
       margin-left: 10%;
       margin-right: 10%;
@@ -141,7 +153,11 @@ This is a static survey form from freeCodeCamp
     }
 
     #dropdown-label2 {
+	dir:"rtl" ;
+	lang: "ar";
       width: 80%;
+      margin-left: 10%;
+      margin-right: 20%;
       height: 30px;
       color: white;
       font-size: 20px;
@@ -149,8 +165,8 @@ This is a static survey form from freeCodeCamp
 
     #dropdown2 {
       width: 20%;
-      margin-left: 60%;
-      margin-right: 9%;
+      margin-left: 20%;
+      margin-right: 60%;
       height: 30px;
       border-radius: 5px;
       font-size: 19px;
@@ -222,11 +238,11 @@ This is a static survey form from freeCodeCamp
       margin-bottom: 25px;
     }
     #submit2 {
-      width: 30%;
-      margin-left: 11%;
-      margin-right: 9%;
+      width: 10%;
+      margin-left: 60%;
+      margin-right: 10%;
       background-color: #003564;
-      text-align: center;
+      text-align: right;
       border-radius: 1px;
       border-color: #003564;
       border-style: solid;
@@ -239,104 +255,117 @@ This is a static survey form from freeCodeCamp
   </style>
 
   <div id="survey-container">
-    <br>
-    <br>
-    <br>
-<form action="{{ url_for('calculations')}}" method="post">
+	<p text-align="right" </p>
 
-      <label id="name-label" for="name">Loan amount</label>
-      <input id="name" name="amount" placeholder="maximum  15000 EGP" required>
-      <button type="submit" id="submit2">Start calculations</button>
+    <br>
+    <br>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;"dir="rtl";lang="ar">دلوقتي احنا هنساعدك انك تحسب بسهولة جدول دفع اقساط  القرض المرن و المميزات اللي بنقدمهالك في السداد </p>
+    <br>
+
+<form action="{{ url_for('calculations')}}" method="post" dir="rtl" lang="ar">
+
+      <label id="name-label" for="name" >من فضلك اكتب مبلغ القرض  </label>
+<br>
+      <input id="name" name="amount" dir="rtl" lang="ar" placeholder="١٥٠٠٠ جنيه اقصى مبلغ" required>
+      <button type="submit" id="submit2" dir="rtl" lang="ar">بداية الحسابات</button>
       </form>
 
-<p style="margin-left: 10%; margin-right: 10%;color: 003564;font-size: 22px;">{{loan_size_txt_no}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: 003564;font-size: 22px;" dir="rtl" lang="ar">{{loan_size_txt_no}}</p>
 
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;text-align: center;text-decoration: overline underline">{{loan_size_txt_yes}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;text-align: center;text-decoration: overline underline" dir="rtl" lang="ar">{{loan_size_txt_yes}}</p>
 
-<form action="{{ url_for('payment_schedule')}}" method="post">
+<form action="{{ url_for('payment_schedule')}}" method="post" dir="rtl" lang="ar">
 
-      <label id="dropdown-label" for="dropdown">How often will you pay installments?</label>
+      <label id="dropdown-label" for="dropdown" dir="rtl" lang="ar"> حابب تدفع القسط كل قد اية؟ </label>
       <select id="dropdown", name=frequency>
-        <option value="monthly">Monthly</option>
-        <option value="biweekly">Biweekly</option>
-        <option value="weekly"> Weekly</option>
+        <option value="monthly" dir="rtl" lang="ar">كل شهر</option>
+        <option value="biweekly" dir="rtl" lang="ar"> كل اسبوعين (مرتين في الشهر)</option>
+        <option value="weekly" dir="rtl" lang="ar">كل اسبوع  (٤ مرات في الشهر)</option>
 
       </select>
 
 
       <br>
       <br>
-      <label for="recommend" id="recommend-label">Do you want a grace period? For how long?</label><br><br>
-      <label id="recommend">
-        <input type="radio" value="yes1" name="grace">Yes -1 month
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;"dir="rtl";lang="ar">دلوقتي انت عندك ميزة في القرض المرن وهي انك ممكن تختار فترة سماح اول شهر او شهرين او ٣ شهور  تدفع الفايدة بس .. 
+</p>
+
+      <label for="recommend" id="recommend-label" dir="rtl" lang="ar"> حابب تستفيد من الميزة دي؟ ولو ايوة حابب الفترة دي تكون كام شهر؟
+</label><br><br>
+      <label id="recommend" dir="rtl" lang="ar">
+        <input type="radio" value="yes1" name="grace" dir="rtl" lang="ar">ايوة - سماح شهر واحد 
       </label><br>
-      <label id="recommend">
-        <input type="radio" value="yes2" name="grace">Yes -2 months
+      <label id="recommend" dir="rtl" lang="ar">
+        <input type="radio" value="yes2" name="grace" dir="rtl" lang="ar">ايوة- سماح شهرين  
       </label><br>
-      <label id="recommend">
-        <input type="radio" value="yes3" name="grace">Yes -3 months
+      <label id="recommend" dir="rtl" lang="ar">
+        <input type="radio" value="yes3" name="grace" dir="rtl" lang="ar">ايوة - سماح تلات شهور
       </label><br>
-      <label id="recommend">
-        <input type="radio" value="no" name="grace">No
+      <label id="recommend" dir="rtl" lang="ar">
+        <input type="radio" value="no" name="grace" dir="rtl" lang="ar">لا مش حابب استفيد من الميزة دي
       </label>
       <br>
       <br>
 
-      <label for="recommend" id="recommend-label">Do you want a repayment holiday?</label><br><br>
-      <label id="recommend">
-        <input type="radio" value="yes" name="holiday">Yes
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;"dir="rtl";lang="ar">فية ميزة تانية وهي انك ترحل سداد الأقساط و تدفع الفايدة بس شهر او شهرين 
+</p>
+    <br>
+ <label for="recommend" id="recommend-label" dir="rtl" lang="ar"> حابب تستفيد من الميزة دي؟ 
+</label><br><br>
+      <label id="recommend"  dir="rtl" lang="ar">
+        <input type="radio" value="yes" name="holiday" dir="rtl" lang="ar">ايوه حابب الميزة دي
       </label>
-<label id="dropdown-label2" for="dropdown">Which months do you want a repayment holiday?</label>
+<label id="dropdown-label2" for="dropdown"  dir="rtl" lang="ar">اختار شهر او شهرين </label>
 
       <select id="dropdown2" name=month1>
         <option value=" "></option>
-        <option value="jan">Jan</option>
-        <option value="feb">Feb</option>
-        <option value="mar">Mar</option>
-        <option value="apr">Apr</option>
-        <option value="may">May</option>
-        <option value="Jun">Jun</option>
-        <option value="jul">Jul</option>
-        <option value="aug">Aug</option>
-        <option value="sep">Sep</option>
-        <option value="oct">Oct</option>
-        <option value="nov">Nov</option>
-        <option value="dec">Dec</option>
+        <option value="jan">يناير</option>
+        <option value="feb">فبراير</option>
+        <option value="mar">مارس</option>
+        <option value="apr">ابريل</option>
+        <option value="may">مايو</option>
+        <option value="Jun">يونيو</option>
+        <option value="jul">يوليو</option>
+        <option value="aug">أغسطس</option>
+        <option value="sep">سبتمبر</option>
+        <option value="oct">أكتوبر</option>
+        <option value="nov">نوفمبر</option>
+        <option value="dec">ديسمبر</option>
       </select>
 
       
       <select id="dropdown2" name=month2>
         <option value=" "></option>
-        <option value="jan">Jan</option>
-        <option value="feb">Feb</option>
-        <option value="mar">Mar</option>
-        <option value="apr">Apr</option>
-        <option value="may">May</option>
-        <option value="jun">Jun</option>
-        <option value="jul">Jul</option>
-        <option value="aug">Aug</option>
-        <option value="sep">Sep</option>
-        <option value="oct">Oct</option>
-        <option value="nov">Nov</option>
-        <option value="dec">Dec</option>
+        <option value="jan">يناير</option>
+        <option value="feb">فبراير</option>
+        <option value="mar">مارس</option>
+        <option value="apr">ابريل</option>
+        <option value="may">مايو</option>
+        <option value="Jun">يونيو</option>
+        <option value="jul">يوليو</option>
+        <option value="aug">أغسطس</option>
+        <option value="sep">سبتمبر</option>
+        <option value="oct">أكتوبر</option>
+        <option value="nov">نوفمبر</option>
+        <option value="dec">ديسمبر</option>
       </select>
       <br>
       <br>
-      <label id="recommend">
-        <input type="radio" value="no" name="holiday">No
+      <label id="recommend" dir="rtl" lang="ar">
+        <input type="radio" value="no" name="holiday" dir="rtl" lang="ar">لا مش حابب استفيد من الميزة دي
       </label>
       <br>
 
-      <button type="submit" id="submit">Submit</button>
+      <button type="submit" id="submit">جدول السداد</button>
     </form>
 
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px";>{{loan_amount_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px";>{{start_month_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;">{{frequency_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;">{{grace_txt}}</p>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px";>{{holiday_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{loan_amount_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{start_month_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{frequency_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{grace_txt}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 22px;" dir="rtl" lang="ar">{{holiday_txt}}</p>
 
-<p  style="margin-left: 10%; margin-right: 10%">{{table_final|safe}}  </p>
+<p  style="margin-left: 70%; margin-right: 10%">{{table_final|safe}}  </p>
 
     
 
