@@ -2,7 +2,6 @@
 This is a static survey form from freeCodeCamp 
 -->
 
-
 <body id="background">
   <header>
     <h1 id="title">جدول سداد القرض المرن</h1>
@@ -141,7 +140,19 @@ This is a static survey form from freeCodeCamp
       font-size: 20px;
     }
 
-    #recommend {
+    #recommend_grace {
+	dir:"rtl" ;
+	lang: "ar";
+      width: 80%;
+      margin-left: 10%;
+      margin-right: 10%;
+      height: 30px;
+      border-radius: 7px;
+      font-size: 18px;
+      color: white;
+    }
+
+    #recommend_holiday {
 	dir:"rtl" ;
 	lang: "ar";
       width: 80%;
@@ -156,18 +167,19 @@ This is a static survey form from freeCodeCamp
     #dropdown-label2 {
 	dir:"rtl" ;
 	lang: "ar";
-      width: 80%;
-      margin-left: 10%;
-      margin-right: 20%;
+      width: 10%;
+      margin-left: 20%;
+      margin-right: 5%;
       height: 30px;
       color: white;
       font-size: 20px;
     }
 
+
     #dropdown2 {
       width: 20%;
       margin-left: 20%;
-      margin-right: 60%;
+      margin-right: 40%;
       height: 30px;
       border-radius: 5px;
       font-size: 18px;
@@ -239,18 +251,18 @@ This is a static survey form from freeCodeCamp
       margin-bottom: 25px;
     }
     #submit2 {
-      width: 79%;
-      margin-left: 11%;
-      margin-right: 9%;
+      width: 10%;
+      margin-left: 60%;
+      margin-right: 10%;
       background-color: #003564;
-      text-align: center;
-      border-radius: 4px;
+      text-align: right;
+      border-radius: 1px;
       border-color: #003564;
       border-style: solid;
       color: white;
       font-size: 18px;
-      height: 60px;
-      margin-top: 40px;
+      height: 30px;
+      margin-top: 20px;
       margin-bottom: 25px;
     }
   </style>
@@ -263,20 +275,19 @@ This is a static survey form from freeCodeCamp
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">دلوقتي احنا هنساعدك انك تحسب بسهولة جدول دفع أقساط القرض المرن والمميزات اللي بنقدمهالك في السداد </p>
     <br>
 
-<form action="{{ url_for('calculations')}}" method="post" dir="rtl" lang="ar">
+<form action="{{ url_for('calculations')}}" method="post" autocomplete="off"  dir="rtl" lang="ar">
 
       <label id="name-label" for="name" >١- من فضلك اكتب مبلغ القرض  </label>
 <br>
-      <input id="name" name="amount" dir="rtl" lang="ar" placeholder="١٥٠٠٠ جنيه أقصى مبلغ
-" required>
+      <input id="name" name="amount" dir="rtl" lang="ar" placeholder="١٥٠٠٠ جنيه أقصى مبلغ" required>
       <button type="submit" id="submit2" dir="rtl" lang="ar">بداية الحسابات</button>
       </form>
 
-<p style="margin-left: 10%; margin-right: 10%;color: 003564;font-size: 20px;" dir="rtl" lang="ar">{{loan_size_txt_no}}</p>
+<p style="margin-left: 10%; margin-right: 10%;color: 89cff0;font-size: 30px;" dir="rtl" lang="ar">{{loan_size_txt_no}}</p>
 
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;text-align: center;text-decoration: overline underline" dir="rtl" lang="ar">{{loan_size_txt_yes}}</p>
 
-<form action="{{ url_for('payment_schedule')}}" method="post" dir="rtl" lang="ar">
+<form action="{{ url_for('payment_schedule')}}" method="post" dir="rtl" lang="ar" autocomplete="off" >
 
       <label id="dropdown-label" for="dropdown" dir="rtl" lang="ar"> ٢- حابب تدفع القسط كل قد ايه؟ </label>
       <select id="dropdown", name=frequency>
@@ -288,35 +299,35 @@ This is a static survey form from freeCodeCamp
 
 
       <br>
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">٣- عندنا ميزة في القرض المرن وهي انك ممكن تختار فترة سماح أول شهر أو شهرين أو ٣ شهور، تدفع فيهم الفايدة بس ..
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">٣- عندنا ميزة في القرض المرن وهي انك ممكن تختار فترة سماح أول شهر أو شهرين أو ٣ شهور  ,تدفع فيهم الفايدة بس .. 
 </p>
 
-      <label for="recommend" id="recommend-label" dir="rtl" lang="ar">  تحب تستفيد من الميزة دي؟ ولو أيوة تحب الفترة دي تكون كام شهر؟
+      <label for="recommend_grace" id="recommend-label" dir="rtl" lang="ar">  تحب تستفيد من الميزة دي؟ ولو أيوة تحب الفترة دي تكون كام شهر؟
 
 </label><br>
-      <label id="recommend" dir="rtl" lang="ar">
+      <label id="recommend_grace" dir="rtl" lang="ar">
         <input type="radio" value="yes1" name="grace" dir="rtl" lang="ar">أيوة - سماح أول شهر  
       </label><br>
-      <label id="recommend" dir="rtl" lang="ar">
+      <label id="recommend_grace" dir="rtl" lang="ar">
         <input type="radio" value="yes2" name="grace" dir="rtl" lang="ar">أيوة - سماح أول شهرين  
       </label><br>
-      <label id="recommend" dir="rtl" lang="ar">
+      <label id="recommend_grace" dir="rtl" lang="ar">
         <input type="radio" value="yes3" name="grace" dir="rtl" lang="ar">أيوة - سماح أول ٣ شهور
       </label><br>
-      <label id="recommend" dir="rtl" lang="ar">
+      <label id="recommend_grace" dir="rtl" lang="ar">
         <input type="radio" value="no" name="grace" dir="rtl" lang="ar">لأ مش حابب أستفيد من الميزة دي
       </label>
       <br>
       <br>
 
-<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">٤- فيه ميزة تانية للقرض المرن، وهي انك تقدر ترحل سداد الأقساط مرة أو مرتين وتدفع الفايدة بس، أي شهر أو شهرين انت تختارهم .. 
+<p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;"dir="rtl";lang="ar">٤- فيه ميزة تانية للقرض المرن، وهي انك تقدر ترحل سداد الأقساط مرة أو مرتين وتدفع الفايدة بس، أي شهر أو شهرين انت تختارهم.. 
 </p>
- <label for="recommend" id="recommend-label" dir="rtl" lang="ar"> تحب تستفيد من الميزة دي؟ 
+ <label for="recommend_holiday" id="recommend-label" dir="rtl" lang="ar"> تحب تستفيد من الميزة دي؟ 
 </label><br>
-      <label id="recommend"  dir="rtl" lang="ar">
-        <input type="radio" value="yes" name="holiday" dir="rtl" lang="ar"> أيوه حابب أستفيد من الميزة دي
+      <label id="recommend_holiday"  dir="rtl" lang="ar">
+        <input type="radio" value="yes" name="holiday" dir="rtl" lang="ar">أيوه حابب أستفيد من الميزة دي  
       </label>
-<label id="dropdown-label2" for="dropdown"  dir="rtl" lang="ar">اختار شهر أو شهرين </label>
+<label id="dropdown-label2" for="dropdown"  dir="rtl" lang="ar">اختار شهر او شهرين </label>
 
       <select id="dropdown2" name=month1>
         <option value=" "></option>
@@ -352,12 +363,13 @@ This is a static survey form from freeCodeCamp
       </select>
       <br>
       <br>
-      <label id="recommend" dir="rtl" lang="ar">
-        <input type="radio" value="no" name="holiday" dir="rtl" lang="ar">لا مش حابب أستفيد من الميزة دي
+      <label id="recommend_holiday" dir="rtl" lang="ar">
+        <input type="radio" value="no" name="holiday" dir="rtl" lang="ar">لأ مش حابب استفيد من الميزة دي
       </label>
       <br>
 
       <button type="submit" id="submit">جدول السداد</button>
+
     </form>
 
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{loan_amount_txt}}</p>
@@ -365,6 +377,8 @@ This is a static survey form from freeCodeCamp
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{frequency_txt}}</p>
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{grace_txt}}</p>
 <p style="margin-left: 10%; margin-right: 10%;color: white;font-size: 20px;" dir="rtl" lang="ar">{{holiday_txt}}</p>
+
+<p style="margin-left: 10%; margin-right: 10%;color: 89cff0;font-size: 30px;" dir="rtl" lang="ar">{{missing_info_txt}}</p>
 
 <p  style="margin-left: 70%; margin-right: 10%">{{table_final|safe}}  </p>
 
