@@ -40,7 +40,7 @@ interest_rate=18/100
 
 @app.route("/")
 def home():
-    return render_template('base_ideal_html.html')
+    return render_template('A_ideal_html.html')
 
 @app.route('/calculations',methods=['POST'])
 def calculations():
@@ -54,12 +54,12 @@ def calculations():
 
     while amount>15000: 
         tmp="المبلغ مينفعش يكون أكبر من  ١٥٠٠٠"
-        return render_template('base_ideal_html.html',loan_size_txt_no=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
+        return render_template('A_ideal_html.html',loan_size_txt_no=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
     else:
         a.append(amount)
 
         tmp=f"مبلغ القرض: {amount}"
-        return render_template('ideal_html.html',loan_size_txt_yes=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
+        return render_template('B_ideal_html.html',loan_size_txt_yes=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
     #print("############### IN CALCULATIONS",a)
     
 @app.route('/payment_schedule',methods=['POST'])
@@ -713,21 +713,26 @@ def payment_schedule():
             with open('html_table_blue.html', 'w',encoding='utf-8') as f:
                 f.write(html_table_blue_light)
     #        print("len(A) vs len(B)",len(a),len(b))
-            return render_template('ideal_html.html',loan_amount_txt=loan_amount_txt,start_month_txt=start_month_txt,frequency_txt=frequency_txt,grace_txt=grace_txt,holiday_txt=holiday_txt, table_final=html_table_blue_light)
+            if frequency=="":
+                missing_info_txt="من فضلك جاوب كل الاسئلة اللي فاتت الأول"
+                return render_template('AB_ideal_html.html',missing_info_txt=missing_info_txt)
+
+            else:
+                return render_template('result_ideal_html.html',loan_amount_txt=loan_amount_txt,start_month_txt=start_month_txt,frequency_txt=frequency_txt,grace_txt=grace_txt,holiday_txt=holiday_txt, table_final=html_table_blue_light)
         elif len(b)>len(a):
-            missing_amount_txt="من فضلك  اكتب مبلغ القرض و دوس ""بداية الحسابات" 
+            missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات" 
             a.clear()
             b.clear()#b.pop(-1)
      #       print("len(A) vs len(B) in case they're not equal",len(a),a,len(b),b)
 
-            return render_template('base_ideal_html.html',loan_size_txt_no=missing_amount_txt)
+            return render_template('A_ideal_html.html',loan_size_txt_no=missing_amount_txt)
     except:
         missing_info_txt="من فضلك جاوب كل الاسئلة اللي فاتت الأول"
         #a.clear()
         #b.clear()#b.pop(-1)
     #    print("len(A) vs len(B) in exception",len(a),len(b))
 
-        return render_template('ideal_html.html',missing_info_txt=missing_info_txt)
+        return render_template('AB_ideal_html.html',missing_info_txt=missing_info_txt)
     
 
 # @app.route("/",methods=['POST'])
