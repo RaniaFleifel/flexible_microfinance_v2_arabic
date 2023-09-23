@@ -91,7 +91,7 @@ def payment_schedule():
                 elif grace_dur==2:
                     grace_dur_ar=" شهرين"
                 else:
-                    grace_dur_ar="3 شهور"
+                    grace_dur_ar="٣ شهور"
         
                 grace_txt=f"هاخد فترة سماح {str(grace_dur_ar)} \n"
             
@@ -246,11 +246,11 @@ def payment_schedule():
                         this_month=options_month_ar[(loc_start_month+int(i/4))%12]
                         new_line=[this_month+", اول اسبوع",0,round(monthly_share/4,2)]
                         df.loc[i]=new_line
-                        new_line=[this_month+", الاسبوع التاني",0,round(monthly_share/4,2)]
+                        new_line=[this_month+", تاني اسبوع",0,round(monthly_share/4,2)]
                         df.loc[i+1]=new_line
-                        new_line=[this_month+", الاسبوع التالت",0,round(monthly_share/4,2)]
+                        new_line=[this_month+", تالت اسبوع",0,round(monthly_share/4,2)]
                         df.loc[i+2]=new_line
-                        new_line=[this_month+", الاسبوع الرابع",round(monthly_share,2),round(monthly_share/4,2)]
+                        new_line=[this_month+", رابع اسبوع",round(monthly_share,2),round(monthly_share/4,2)]
                         df.loc[i+3]=new_line
                         
                         
