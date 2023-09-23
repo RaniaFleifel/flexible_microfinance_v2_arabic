@@ -48,7 +48,7 @@ def calculations():
 
     data=request.form#.values()
 
-    amount=int(data["amount"])
+    amount=float(data["amount"])
     std_loan_noapprox=[]
     flexible_loan_noapprox=[] 
 
