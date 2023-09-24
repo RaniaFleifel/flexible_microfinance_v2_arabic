@@ -91,7 +91,7 @@ def payment_schedule():
     try:
         loan_size=a[len(a)-1]#in case of multiple entries 
     except:
-        missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات l0l0l0l0l0" 
+        missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات *" 
         a.clear()
         b.clear()#b.pop(-1)
         thistab.clear()
@@ -772,7 +772,7 @@ def payment_schedule():
         
         else:# loan_size!=thistab[0]:
    #         print("***** fe tabs mfto7a",loan_size,thistab)
-            missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات****" 
+            missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات" 
             a.clear()
             b.clear()#b.pop(-1)
         #    print("len(A) vs len(B) in exception",len(a),len(b))
