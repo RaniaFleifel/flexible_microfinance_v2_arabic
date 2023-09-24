@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Sun Sep 24 03:05:16 2023
+
+@author: rania
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Wed Sep  6 14:48:54 2023
 
 @author: rania
@@ -25,6 +32,7 @@ import pandas as pd
 from tabulate import tabulate
 import re
 from pretty_html_table import build_table
+import random
 
 a=[]
 b=[]
@@ -35,12 +43,17 @@ entries=[]
 app=Flask(__name__,template_folder='templates')
 options_month = ['jan', 'feb', 'mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
 options_month_ar = ['يناير', 'فبراير', 'مارس','ابريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
-
+num1 = random.randint(0, 100)
+thistab=[]
 interest_rate=18/100
-
+rand_num=[]
 @app.route("/")
 def home():
+    thistab=[]
+
     return render_template('A_ideal_html.html')
+
+
 
 @app.route('/calculations',methods=['POST'])
 def calculations():
@@ -57,17 +70,37 @@ def calculations():
         return render_template('A_ideal_html.html',loan_size_txt_no=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
     else:
         a.append(amount)
+        thistab.append(amount)
 
         tmp=f"مبلغ القرض: {amount}"
+#        tabs=pd.DataFrame(columns=["rand_generated","amount"])
+#        tabs.append([num1,amount])
+#        tabs.to_csv("tabs.csv",mode='a')
+        with open('data.txt', 'a',encoding='utf-8') as f:
+            f.write("\n"+str(num1))
+            f.write(","+str(amount))
         return render_template('B_ideal_html.html',loan_size_txt_yes=tmp)#.append('The size of the loan is {} egp\n'.format(loan_size[0])))
-    #print("############### IN CALCULATIONS",a)
+    print("############### IN CALCULATIONS",a)
     
 @app.route('/payment_schedule',methods=['POST'])
 def payment_schedule():
-    #print("############### IN PAYMENT SCHEDULE",a[0])
+    #if (num1==rand_num[len(rand_num)-1]):
+    #    print("proceed?")
+    #else:
+    #    print("7ALET TWARE2 G")
+    try:
+        loan_size=a[len(a)-1]#in case of multiple entries 
+    except:
+        missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات l0l0l0l0l0" 
+        a.clear()
+        b.clear()#b.pop(-1)
+        thistab.clear()
 
-    loan_size=a[len(a)-1]#in case of multiple entries 
-    #print("############### IN PAYMENT SCHEDULE",loan_size,'LEN(A)',len(a))
+
+        return render_template('A_ideal_html.html',loan_size_txt_no=missing_amount_txt)
+
+    #if loan_size==thistab[0]:
+#    print("############### IN PAYMENT SCHEDULE",loan_size,'LEN(A)',len(a),"ALL A",a)
 
     data=request.form
     b.append(data)
@@ -75,7 +108,7 @@ def payment_schedule():
     frequency=data["frequency"]
     #if len(a)len(b)
     try:
-        if len(a)==len(b):
+        if len(a)==len(b):# or (len(a)>len(b) and loan_size==thistab[-1]) :
             holiday_yn=data["holiday"]
          
         #    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>b after append",b,'LEN(B)',len(b))
@@ -91,7 +124,7 @@ def payment_schedule():
                 elif grace_dur==2:
                     grace_dur_ar=" شهرين"
                 else:
-                    grace_dur_ar="٣ شهور"
+                    grace_dur_ar="3 شهور"
         
                 grace_txt=f"هاخد فترة سماح {str(grace_dur_ar)} \n"
             
@@ -219,7 +252,7 @@ def payment_schedule():
                         new_line=[this_month,round(monthly_share,2),round(monthly_share,2)]
             
                         df.loc[i]=new_line
-                        print("???????????????,",std_loan_noapprox)
+#                        print("???????????????,",std_loan_noapprox)
                         
   #                  print("^^^^^^^^^^^^^^^^^^^^^how much is i now?",i, std_loan_noapprox)
                     df.loc[i+1]=["------------------","------------------","------------------"]
@@ -712,28 +745,68 @@ def payment_schedule():
             # Save to html file
             with open('html_table_blue.html', 'w',encoding='utf-8') as f:
                 f.write(html_table_blue_light)
-    #        print("len(A) vs len(B)",len(a),len(b))
+ #           print("len(A) vs len(B)",len(a),len(b))
             if frequency=="":
                 missing_info_txt="من فضلك جاوب كل الاسئلة اللي فاتت الأول"
+                #thistab.clear()
+ #               print("***** el mfrod el egabat na2sa 3mtan WARENI",loan_size,thistab)
+                thistab.clear()
+
                 return render_template('AB_ideal_html.html',missing_info_txt=missing_info_txt)
 
-            else:
+            elif loan_size==thistab[-1]:
+#                print("***** folla WARENI",loan_size,thistab)
+ #               print(a[0],"###################",b)
+                thistab.clear()
+                a.clear()
+                b.clear()
                 return render_template('result_ideal_html.html',loan_amount_txt=loan_amount_txt,start_month_txt=start_month_txt,frequency_txt=frequency_txt,grace_txt=grace_txt,holiday_txt=holiday_txt, table_final=html_table_blue_light)
-        elif len(b)>len(a):
-            missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات" 
+        # elif loan_size==thistab[-1]:
+        #     print("***** akher haga raghm en fe 3ak WARENI",loan_size,thistab)
+        #     thistab.clear()
+
+        #     a.clear()
+        #     b.clear()#b.pop(-1)
+
+        #     return render_template('result_ideal_html.html',loan_amount_txt=loan_amount_txt,start_month_txt=start_month_txt,frequency_txt=frequency_txt,grace_txt=grace_txt,holiday_txt=holiday_txt, table_final=html_table_blue_light)
+        
+        else:# loan_size!=thistab[0]:
+   #         print("***** fe tabs mfto7a",loan_size,thistab)
+            missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات****" 
             a.clear()
             b.clear()#b.pop(-1)
-     #       print("len(A) vs len(B) in case they're not equal",len(a),a,len(b),b)
+        #    print("len(A) vs len(B) in exception",len(a),len(b))
+            thistab.clear()
+            print("????????????????? len(A) vs len(B) in case they're not equal",len(a),a,len(b),b)
 
             return render_template('A_ideal_html.html',loan_size_txt_no=missing_amount_txt)
+
+
+     #       print("len(A) vs len(B) in case they're not equal",len(a),a,len(b),b)
+
     except:
         missing_info_txt="من فضلك جاوب كل الاسئلة اللي فاتت الأول"
-        #a.clear()
-        #b.clear()#b.pop(-1)
+#        print("*****EXCEPTION el mfrod el egabat na2sa 3mtan WARENI",loan_size,thistab)
+
+#        thistab.clear()
+
+        a.clear()
+        b.clear()#b.pop(-1)
     #    print("len(A) vs len(B) in exception",len(a),len(b))
+        thistab.clear()
+
 
         return render_template('AB_ideal_html.html',missing_info_txt=missing_info_txt)
-    
+# else:
+#     missing_amount_txt="من فضلك  اكتب مبلغ القرض و اختار ""بداية الحسابات" 
+#     a.clear()
+#     b.clear()#b.pop(-1)
+#     thistab.clear()
+#     print("????????????????? len(A) vs len(B) in case they're not equal",len(a),a,len(b),b)
+
+#     return render_template('A_ideal_html.html',loan_size_txt_no=missing_amount_txt)
+
+        
 
 # @app.route("/",methods=['POST'])
 # def home2():
